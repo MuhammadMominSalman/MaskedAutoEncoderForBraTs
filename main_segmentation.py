@@ -307,7 +307,8 @@ def trainer(
 
 torch.multiprocessing.set_sharing_strategy('file_system')
 data_dir = "/home/woody/iwi5/iwi5132h/BraTS2021_TrainingData"
-json_list = "/home/woody/iwi5/iwi5132h/MAE/brats21_folds.json"
+json_list = "./brats21_folds.json"
+model_loc = "./model/checkpoint-100.pth"
 roi = (128, 128, 128)
 batch_size = 2
 sw_batch_size = 4
@@ -318,7 +319,8 @@ val_every = 5
 train_loader, val_loader = get_loader(batch_size, data_dir, json_list, fold, roi)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-model = UNETR(img_shape=(128, 128, 128), input_dim=4, output_dim=3, embed_dim=768, patch_size=16).to(device)
+model = UNETR(img_shape=(128, 128, 128), input_dim=4, output_dim=3, embed_dim=768,
+              patch_size=16, pretrained=True, model_loc=model_loc).to(device)
 
 torch.backends.cudnn.benchmark = True
 dice_loss = DiceLoss(to_onehot_y=False, sigmoid=True)
