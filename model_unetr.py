@@ -51,7 +51,8 @@ class Deconv3DBlock(nn.Module):
 
 
 class UNETR(nn.Module):
-    def __init__(self, img_shape=(128, 128, 128), input_dim=4, output_dim=3, embed_dim=768, patch_size=16, pretrained=True):
+    def __init__(self, img_shape=(128, 128, 128), input_dim=4, output_dim=3,
+                 embed_dim=768, patch_size=16, pretrained=True, model_loc=""):
         super().__init__()
         self.input_dim = input_dim
         self.output_dim = output_dim
@@ -69,7 +70,7 @@ class UNETR(nn.Module):
             global_pool=False,
         )
         if pretrained==True:
-            checkpoint = torch.load('checkpoint-100.pth', map_location=torch.device('cpu'))
+            checkpoint = torch.load(model_loc, map_location=torch.device('cpu'))
             checkpoint_model = checkpoint['model']
             state_dict = self.transformer.state_dict()
             for k in ['head.weight', 'head.bias']:
